@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/', jsonParser, (req, res) => {
 	const requiredFields = ['username', 'password'];
-	const missingField = requiredFields.find(field => !(field in req.body));
+	const missingField = requiredFields.find(field => !(field in req.body.user));
 
 	if(missingField) {
 		return res.status(422).json({
@@ -29,10 +29,10 @@ router.post('/', jsonParser, (req, res) => {
 	};
 
 	const tooSmallField = Object.keys(sizedFields).find(
-			field => 'min' in sizedFields[field] && req.body[field].trim().length < sizedFields[field].min
+			field => 'min' in sizedFields[field] && req.body.user[field].trim().length < sizedFields[field].min
 		);
 	const tooLargeField = Object.keys(sizedFields).find(
-			field => 'max' in sizedFields[field] && req.body[field].trim().length > sizedFields[field].max
+			field => 'max' in sizedFields[field] && req.body.user[field].trim().length > sizedFields[field].max
 		);
 
 	if(tooSmallField || tooLargeField) {
@@ -45,7 +45,8 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 	}
 
-    let {username, password} = req.body;
+    let {username, password} = req.body.user;
+    let highscore = req.body.highScore;
 
     return user.find({username})
 	    .count()
@@ -63,7 +64,8 @@ router.post('/', jsonParser, (req, res) => {
 	    .then(hash => {
 	    	return user.create({
 	    		username,
-	    		password: hash
+	    		password: hash,
+	    		highscore
 	    	});
 	    })
 	    .then(user => {
@@ -78,10 +80,44 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 });
 
+// router.get('/', (req, res) => {
+// 	return user.find()
+// 		.then(users => res.json(users.map(user => user.serialize())))
+// 		.catch(err => res.status(500).json({message: 'Internal server error'}))
+// });
+
 router.get('/', (req, res) => {
 	return user.find()
-		.then(users => res.json(users.map(user => user.serialize())))
+		.then(users => {
+			return res.status(200).send(users)
+		})
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
+});
+
+// router.get('/:id', (req, res) => {
+// 	user.findOne({_id: req.params.id})
+// 		.then(_user => {
+// 			console.log(_user);
+// 			res.status(200).json(_user.highscore)
+// 		})
+// 		.catch(err => {
+// 			res.status(500).send(err);
+// 		});
+// });
+router.get('/update/:id', (req, res) => {
+	user.findOne({_id: req.params.id})
+		.then(_user => {
+			res.status(200).send(_user);
+		})
+		.catch(err => {
+			res.status(500).send(err);
+		});
+})
+
+router.put('/:id', jsonParser, (req, res) => {
+	user.findByIdAndUpdate(req.params.id, {$set: {highscore: req.body.highscore}}, {new: true})
+		.then(updatedScore => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Something went wrong'}));
 });
 
 module.exports = {router}

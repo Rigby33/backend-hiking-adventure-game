@@ -19,6 +19,17 @@ const localAuth = passport.authenticate('local', { session: false });
 router.use(bodyParser.json());
 
 router.post('/login', localAuth, (req, res) => {
+	if(req.user.highscore < req.body.highscore) {
+		req.user.set({highscore: req.body.highscore});
+		req.user.save();
+	}
+	const authToken = createAuthToken(req.user);
+	res.json({authToken});
+});
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+router.post('/refresh', jwtAuth, (req, res) => {
 	const authToken = createAuthToken(req.user);
 	res.json({authToken});
 });
