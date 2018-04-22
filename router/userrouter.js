@@ -87,7 +87,7 @@ router.post('/', jsonParser, (req, res) => {
 // });
 
 router.get('/', (req, res) => {
-	return user.find()
+	return user.find().sort({highscore: -1})
 		.then(users => {
 			return res.status(200).send(users)
 		})
