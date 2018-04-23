@@ -14,9 +14,6 @@ const { PORT, MONGO_URL } = require('./config');
 
 const app = express();
 
-// app.use('/users', userRouter);
-// app.use('/login', authRouter);
-
 const cors = require('cors');
 const {CLIENT_ORIGIN} = require('./config');
 
@@ -27,22 +24,6 @@ app.use(
 );
 
 app.use(morgan('common'));
-
-// app.use(function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-//   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
-//   if (req.method === 'OPTIONS') {
-//     return res.send(204);
-//   }
-//   next();
-// });
-
-// app.use(
-//     cors({
-//         origin: CLIENT_ORIGIN
-//     })
-// );
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
@@ -105,9 +86,3 @@ if(require.main === module) {
 }
 
 module.exports = { app, runServer, closeServer }
-// app.get('/', (req, res) => {
-// 	console.log('hi it\'s working');
-// 	res.json({})
-// });
-
-// app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));

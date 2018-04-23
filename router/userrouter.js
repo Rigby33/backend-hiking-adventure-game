@@ -80,12 +80,6 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 });
 
-// router.get('/', (req, res) => {
-// 	return user.find()
-// 		.then(users => res.json(users.map(user => user.serialize())))
-// 		.catch(err => res.status(500).json({message: 'Internal server error'}))
-// });
-
 router.get('/', (req, res) => {
 	return user.find().sort({highscore: -1})
 		.then(users => {
@@ -94,16 +88,6 @@ router.get('/', (req, res) => {
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
 });
 
-// router.get('/:id', (req, res) => {
-// 	user.findOne({_id: req.params.id})
-// 		.then(_user => {
-// 			console.log(_user);
-// 			res.status(200).json(_user.highscore)
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send(err);
-// 		});
-// });
 router.get('/update/:id', (req, res) => {
 	user.findOne({_id: req.params.id})
 		.then(_user => {
