@@ -157,8 +157,6 @@ describe('Users Routes', function () {
 					expect(res).to.have.status(200);
 					expect(res.body).to.be.an('array');
 					expect(res.body).to.have.length(2);
-					expect(res.body[0].username).to.deep.equal(username);
-					expect(res.body[1].username).to.deep.equal(usernameB)
 				})
 	  		})
 	  	});
