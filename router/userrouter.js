@@ -6,7 +6,6 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 router.post('/', jsonParser, (req, res) => {
-	console.log(req.body);
 	const requiredFields = ['username', 'password'];
 	const missingField = requiredFields.find(field => !(field in req.body.user));
 

@@ -37,9 +37,9 @@ describe('Users Routes', function () {
 				return chai
 					.request(app)
 					.post('/user')
-					.send({
+					.send({user: {
 						password
-					})
+					}, highscore: 0})
 					.then((res) => {
 						expect(res).to.have.status(422);
 						expect(res.body.reason).to.equal('ValidationError');
@@ -51,9 +51,9 @@ describe('Users Routes', function () {
 				return chai
 					.request(app)
 					.post('/user')
-					.send({
+					.send({user: {
 						username
-					})
+					}, highscore: 0})
 					.then((res) => {
 						expect(res).to.have.status(422);
 						expect(res.body.reason).to.equal('ValidationError');
@@ -65,10 +65,10 @@ describe('Users Routes', function () {
 				return chai
 					.request(app)
 					.post('/user')
-					.send({
+					.send({user: {
 						username,
 						password: '123456'
-					})
+					}, highscore: 0})
 					.then((res) => {
 						expect(res).to.have.status(422);
 						expect(res.body.reason).to.equal('ValidationError');
@@ -80,10 +80,10 @@ describe('Users Routes', function () {
 				return chai
 					.request(app)
 					.post('/user')
-					.send({
+					.send({user: {
 						username,
 						password: new Array(73).fill('a').join(''),
-					})
+					}, highscore: 0})
 					.then((res) => {
 						expect(res).to.have.status(422);
 						expect(res.body.reason).to.equal('ValidationError');
@@ -97,10 +97,10 @@ describe('Users Routes', function () {
 					password
 				})
 				.then(() =>
-					chai.request(app).post('/user').send({
-						username,
-						password
-					})
+					chai.request(app).post('/user').send({user: {
+					username,
+					password
+				}, highscore: 0})
 				)
 				.then((res) => {
 					expect(res).to.have.status(422);
@@ -113,10 +113,10 @@ describe('Users Routes', function () {
 				return chai
 				.request(app)
 				.post('/user')
-				.send({
+				.send({user: {
 					username,
 					password
-				})
+				}, highscore: 0})
 				.then(res => {
 					expect(res).to.have.status(201);
 					expect(res.body).to.be.an('object');
