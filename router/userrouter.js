@@ -6,8 +6,9 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 router.post('/', jsonParser, (req, res) => {
+	console.log(req.body);
 	const requiredFields = ['username', 'password'];
-	const missingField = requiredFields.find(field => !(field in req.body));
+	const missingField = requiredFields.find(field => !(field in req.body.user));
 
 	if (missingField) {
 		return res.status(422).json({
@@ -29,10 +30,10 @@ router.post('/', jsonParser, (req, res) => {
 	};
 
 	const tooSmallField = Object.keys(sizedFields).find(
-			field => 'min' in sizedFields[field] && req.body[field].trim().length < sizedFields[field].min
+			field => 'min' in sizedFields[field] && req.body.user[field].trim().length < sizedFields[field].min
 		);
 	const tooLargeField = Object.keys(sizedFields).find(
-			field => 'max' in sizedFields[field] && req.body[field].trim().length > sizedFields[field].max
+			field => 'max' in sizedFields[field] && req.body.user[field].trim().length > sizedFields[field].max
 		);
 
 	if(tooSmallField || tooLargeField) {
@@ -45,7 +46,7 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 	}
 
-    let {username, password} = req.body;
+    let {username, password} = req.body.user;
     let highscore = req.body.highScore;
 
     return user.find({username})
